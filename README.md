@@ -12,3 +12,7 @@ Please note that I have not created all the characters in the game, so there may
 ## Libraries required for compilation (if you don’t want to use the .exe):
 - tkinter
 - PyInstaller
+
+---
+
+![Application Preview](image.png)
