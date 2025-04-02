@@ -203,11 +203,21 @@ class App(tk.Tk):
         
         headers = {"Cookie": cookie}
         try:
-            response = requests.get(CHARACTERS_URL, headers=headers)
+            response = requests.get(CHARACTERS_URL, headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
+        except requests.exceptions.RequestException as e:
+            messagebox.showerror("Error", f"Error getting characters: The cookie may be invalid or expired.\n{e}")
+            # Clear existing cards to prevent confusion
+            for widget in self.cards_frame.winfo_children():
+                widget.destroy()
+            ttk.Label(self.cards_frame, text="Unable to load characters. Please check your cookie and try again.\nIf you want process a JSON press first 'Process' and then put JSON.").pack()
+            # Update scrollable region
+            self.canvas.update_idletasks()
+            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+            return
         except Exception as e:
-            messagebox.showerror("Error", f"Error getting characters:\n{e}")
+            messagebox.showerror("Error", f"Error processing response:\n{e}")
             return
         
         # Clear existing cards
@@ -245,17 +255,19 @@ class App(tk.Tk):
         displays JSON on screen and processes it to get PoB code."""
         cookie = self.cookie_entry.get().strip()
         if not cookie:
-            messagebox.showerror("Error", "You must enter and save the cookie before querying details.")
-            return
+            messagebox.showwarning("Warning", "No cookie provided. Character details may not load correctly.")
         
-        headers = {"Cookie": cookie}
+        headers = {"Cookie": cookie} if cookie else {}
         url = CHARACTER_DETAIL_URL + name
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, timeout=10)
             response.raise_for_status()
             detail_json = response.json()
+        except requests.exceptions.RequestException as e:
+            messagebox.showerror("Error", f"Error getting character details: The cookie may be invalid or expired.\n{e}")
+            return
         except Exception as e:
-            messagebox.showerror("Error", f"Error getting character details:\n{e}")
+            messagebox.showerror("Error", f"Error processing response:\n{e}")
             return
         
         # Save JSON to character.json file

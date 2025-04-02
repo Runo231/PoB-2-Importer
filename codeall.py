@@ -38,7 +38,9 @@ def create_tree_from_passives(passives, char):
         "Mercenary1": ("2", "1"),
         "Mercenary3": ("2", "2"), #Tested Gemling Legionary
         "Sorceress1": ("4", "1"), #Tested Stormweaver
-        "Sorceress2": ("4", "2") #Tested Chronomancer
+        "Sorceress2": ("4", "2"), #Tested Chronomancer
+        "Witch1": ("3", "1"), #Tested Infernalist
+        "Witch2": ("3", "2") 
     }
 
     log("Creando Tree a partir de passives...")
